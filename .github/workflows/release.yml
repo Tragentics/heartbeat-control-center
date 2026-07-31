@@ -1,0 +1,86 @@
+# Cross-platform release pipeline.
+# Trigger: push a tag like v1.0.0 → builds native installers on Windows, macOS,
+# and Linux runners and attaches them to a DRAFT GitHub release for review.
+# Manual runs (workflow_dispatch) build without creating a release.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ''
+          - platform: macos-latest
+            # One universal binary that runs on both Apple Silicon and Intel.
+            args: '--target universal-apple-darwin'
+          - platform: ubuntu-24.04
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: heartbeat-control-center/package-lock.json
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: heartbeat-control-center/src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: heartbeat-control-center
+
+      - name: Build installers and attach to draft release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: heartbeat-control-center
+          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+          releaseName: ${{ startsWith(github.ref, 'refs/tags/') && format('Tragentics Heartbeat Control Center {0}', github.ref_name) || '' }}
+          releaseBody: |
+            Download the installer for your platform from the assets below:
+
+            - **Windows** — `*-setup.exe`
+            - **macOS** (Apple Silicon + Intel) — `*.dmg`
+            - **Linux** — `*.AppImage` or `*.deb`
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
