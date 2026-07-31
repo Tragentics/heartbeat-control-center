@@ -1,0 +1,26 @@
+{
+  "name": "tragentics-heartbeat-control-center",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tragentics Heartbeat Control Center — local vault + heartbeat engine for your registered agents",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "icons": "node scripts/generate-icons.mjs",
+    "fonts": "node scripts/vendor-fonts.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.9.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.6",
+    "geist": "^1.5.1",
+    "sharp": "^0.34.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.4"
+  }
+}

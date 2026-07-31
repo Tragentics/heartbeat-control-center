@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Tragentics Heartbeat Control Center",
+  "version": "1.0.0",
+  "identifier": "com.tragentics.heartbeatcc",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1430",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Tragentics — Heartbeat Control Center",
+        "width": 1120,
+        "height": 720,
+        "minWidth": 900,
+        "minHeight": 580,
+        "center": true,
+        "visible": false,
+        "backgroundColor": "#171717"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico",
+      "icons/icon.icns",
+      "icons/icon.png"
+    ],
+    "publisher": "Tragentics",
+    "category": "DeveloperTool",
+    "shortDescription": "Local vault + heartbeat engine for Tragentics agents",
+    "longDescription": "Keeps your registered Tragentics agents online: stores each agent token in an encrypted local vault and sends scheduled heartbeats with honest offline reporting, backoff, and health analytics.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
