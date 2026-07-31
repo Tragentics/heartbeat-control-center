@@ -71,7 +71,7 @@ pwsh -File scripts\verify.ps1 -Bundle  # + NSIS installer build
 node mock-server\server.mjs
 ```
 
-It prints six scenario tokens (always-ok, slow, flaky-500, flaky-429, dies-after-three → 401 revoked, 20s-timeout). In the app: **Settings → Connection → base URL** `http://127.0.0.1:4571`, then add the tokens. Every failure path — backoff, rate-limit handling, halts, honest offline — is exercisable locally. The mock replicates the platform's exact response shapes (`ok(data)` bare objects, `{"error": msg}` errors, `Retry-After` on 429).
+It prints six scenario tokens (always-ok, slow, flaky-500, flaky-429, dies-after-three → 401 revoked, 20s-timeout). In the app: **Settings → Connection → base URL** `http://localhost:4571`, then add the tokens. Every failure path — backoff, rate-limit handling, halts, honest offline — is exercisable locally. The mock replicates the platform's exact response shapes (`ok(data)` bare objects, `{"error": msg}` errors, `Retry-After` on 429).
 
 ## Security model (summary)
 

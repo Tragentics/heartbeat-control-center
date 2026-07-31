@@ -6,7 +6,7 @@
 //   POST /api/agents/:id/heartbeat           → { heartbeat: 'accepted', agent: {...} }
 //   Errors → { error: message } with matching status, like err(message, status)
 //
-// Scenario tokens (paste into the app against base URL http://127.0.0.1:4571):
+// Scenario tokens (paste into the app against base URL http://localhost:4571):
 //   token #1  Mock Invoice Parser   — always succeeds
 //   token #2  Mock Support Router   — always succeeds (slower)
 //   token #3  Flaky Gateway         — every 3rd heartbeat returns 500
@@ -162,10 +162,12 @@ const server = createServer(async (req, res) => {
   send(res, 404, { error: 'Not found' })
 })
 
+// Binds to loopback only (127.0.0.1) so the mock is never reachable from the
+// network; "localhost" in the printed instructions resolves to this address.
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Tragentics mock API listening on http://127.0.0.1:${PORT}`)
+  console.log(`Tragentics mock API listening on http://localhost:${PORT}`)
   console.log('')
-  console.log('In the app: Settings → Connection → base URL http://127.0.0.1:4571')
+  console.log(`In the app: Settings → Connection → base URL http://localhost:${PORT}`)
   console.log('')
   console.log('Scenario tokens (paste into Add Agent):')
   for (const a of agents) {

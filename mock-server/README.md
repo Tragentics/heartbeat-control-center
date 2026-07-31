@@ -3,10 +3,10 @@
 A local stand-in for the two platform endpoints the Heartbeat Control Center talks to. It exists so the app can be tested end-to-end **without ever touching the production platform** — no real agents, no real heartbeats, no production writes of any kind.
 
 ```bash
-node server.mjs        # listens on http://127.0.0.1:4571 (PORT env to change)
+node server.mjs        # listens on http://localhost:4571 (PORT env to change)
 ```
 
-On boot it prints six freshly generated scenario tokens. In the app, set **Settings → Connection → base URL** to `http://127.0.0.1:4571`, then paste tokens into **Add Agent**:
+On boot it prints six freshly generated scenario tokens. In the app, set **Settings → Connection → base URL** to `http://localhost:4571`, then paste tokens into **Add Agent**:
 
 | Agent | Behavior | What it proves |
 |---|---|---|
